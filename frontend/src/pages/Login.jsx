@@ -13,9 +13,13 @@ export default function Login({ onLogin }) {
     setLoading(true)
     try {
       const data = await login(username, password)
-      const user = await getMe()
-      // temporarily set token so getMe works
+
+      // Save token FIRST (important)
       localStorage.setItem('token', data.access_token)
+
+      // Now get user details
+      const user = await getMe()
+
       onLogin(data.access_token, user)
     } catch (err) {
       setError(err.response?.data?.detail || 'Login failed')
